@@ -91,7 +91,7 @@
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
             <manifestEntries>
-              <Automatic-Module-Name>cc.u0.mu-cranker-router-mod</Automatic-Module-Name>
+              <Automatic-Module-Name>cc.u0.mucranker.router.mod</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
