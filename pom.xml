@@ -5,13 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cc.u-0</groupId>
-  <artifactId>jiavva</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <artifactId>mu-cranker-router-mod</artifactId>
+  <version>0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
-  <description>A tiny Java utility package for the u-0.cc namespace.</description>
-  <url>https://u-0.cc/jiavva</url>
+  <description>Modification to mu-cranker-router</description>
+  <url>https://github.com/fthms-blxzi/mu-cranker-router-mod</url>
 
   <inceptionYear>2026</inceptionYear>
 
@@ -29,31 +29,46 @@
       <id>u-0</id>
       <name>u-0.cc Maintainers</name>
       <organization>u-0.cc</organization>
-      <organizationUrl>https://u-0.cc</organizationUrl>
+      <organizationUrl>https://github.com/fthms-blxzi</organizationUrl>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/fthms-blxzi/jiavva.git</connection>
-    <developerConnection>scm:git:https://github.com/fthms-blxzi/jiavva.git</developerConnection>
-    <url>https://github.com/fthms-blxzi/jiavva</url>
+    <connection>scm:git:https://github.com/fthms-blxzi/mu-cranker-router-mod.git</connection>
+    <developerConnection>scm:git:https://github.com/fthms-blxzi/mu-cranker-router-mod.git</developerConnection>
+    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>u-0.cc</system>
-    <url>https://github.com/fthms-blxzi/jiavva/issues</url>
+    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod/issues</url>
   </issueManagement>
 
   <ciManagement>
     <system>u-0.cc</system>
-    <url>https://github.com/fthms-blxzi/jiavva/actions</url>
+    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod/actions</url>
   </ciManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.muserver</groupId>
+      <artifactId>mu-server</artifactId>
+      <version>2.3.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.hsbc.cranker</groupId>
+      <artifactId>mu-cranker-router</artifactId>
+      <version>2.0.4</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -76,7 +91,7 @@
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
             <manifestEntries>
-              <Automatic-Module-Name>cc.u0.jiavva</Automatic-Module-Name>
+              <Automatic-Module-Name>cc.u0.mu-cranker-router-mod</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
