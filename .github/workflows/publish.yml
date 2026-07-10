@@ -2,12 +2,9 @@ name: Publish
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -27,7 +24,8 @@ jobs:
         run: |
           mkdir -p "$HOME/.m2"
           cp settings-central-template.xml "$HOME/.m2/settings.xml"
-
+      - name: Verify package
+        run: mvn --batch-mode verify
       - name: Publish to Central Portal
         shell: bash
         env:
