@@ -1,3 +1,3 @@
-# mu-cranker-router-mod
+# cranker-connector-mod
 
-To modify the `RouterSocketV3.java` implementation and do tests against connector.
+To modify the `ConnectorSocketV3.java` implementation and do tests against router.
