@@ -1,0 +1,8 @@
+target/
+.idea/
+.vscode/
+*.iml
+*.log
+settings.xml.txt
+settings.local.xml
+

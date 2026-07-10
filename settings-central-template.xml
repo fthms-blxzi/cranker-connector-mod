@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copy this into your local Maven settings.xml or use it as a CI template.
+  Never commit real Central Portal tokens.
+
+  Windows: %USERPROFILE%\.m2\settings.xml
+  macOS/Linux: ~/.m2/settings.xml
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <servers>
+    <server>
+      <!-- Must match <publishingServerId>central</publishingServerId> in pom.xml -->
+      <id>central</id>
+      <username>${env.CENTRAL_TOKEN_USERNAME}</username>
+      <password>${env.CENTRAL_TOKEN_PASSWORD}</password>
+    </server>
+  </servers>
+</settings>
