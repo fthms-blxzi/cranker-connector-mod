@@ -5,13 +5,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cc.u-0</groupId>
-  <artifactId>mu-cranker-router-mod</artifactId>
+  <artifactId>cranker-connector-mod</artifactId>
   <version>0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
-  <description>Modification to mu-cranker-router</description>
-  <url>https://github.com/fthms-blxzi/mu-cranker-router-mod</url>
+  <description>Modification to cranker-connector</description>
+  <url>https://github.com/fthms-blxzi/cranker-connector-mod</url>
 
   <inceptionYear>2026</inceptionYear>
 
@@ -34,20 +34,20 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/fthms-blxzi/mu-cranker-router-mod.git</connection>
-    <developerConnection>scm:git:https://github.com/fthms-blxzi/mu-cranker-router-mod.git</developerConnection>
-    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod</url>
+    <connection>scm:git:https://github.com/fthms-blxzi/cranker-connector-mod.git</connection>
+    <developerConnection>scm:git:https://github.com/fthms-blxzi/cranker-connector-mod.git</developerConnection>
+    <url>https://github.com/fthms-blxzi/cranker-connector-mod</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>u-0.cc</system>
-    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod/issues</url>
+    <url>https://github.com/fthms-blxzi/cranker-connector-mod/issues</url>
   </issueManagement>
 
   <ciManagement>
     <system>u-0.cc</system>
-    <url>https://github.com/fthms-blxzi/mu-cranker-router-mod/actions</url>
+    <url>https://github.com/fthms-blxzi/cranker-connector-mod/actions</url>
   </ciManagement>
 
   <properties>
@@ -57,15 +57,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.muserver</groupId>
-      <artifactId>mu-server</artifactId>
-      <version>2.3.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.hsbc.cranker</groupId>
-      <artifactId>mu-cranker-router</artifactId>
-      <version>2.0.4</version>
+      <artifactId>cranker-connector</artifactId>
+      <version>1.3.4</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
