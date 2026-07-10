@@ -34,20 +34,20 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://u-0.cc/jiavva.git</connection>
-    <developerConnection>scm:git:https://u-0.cc/jiavva.git</developerConnection>
-    <url>https://u-0.cc/jiavva</url>
+    <connection>scm:git:https://github.com/fthms-blxzi/jiavva.git</connection>
+    <developerConnection>scm:git:https://github.com/fthms-blxzi/jiavva.git</developerConnection>
+    <url>https://github.com/fthms-blxzi/jiavva</url>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>u-0.cc</system>
-    <url>https://u-0.cc/jiavva/issues</url>
+    <url>https://github.com/fthms-blxzi/jiavva/issues</url>
   </issueManagement>
 
   <ciManagement>
     <system>u-0.cc</system>
-    <url>https://u-0.cc/jiavva/actions</url>
+    <url>https://github.com/fthms-blxzi/jiavva/actions</url>
   </ciManagement>
 
   <properties>
