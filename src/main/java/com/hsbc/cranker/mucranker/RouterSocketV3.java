@@ -4,6 +4,7 @@ import io.muserver.AsyncHandle;
 import io.muserver.BaseWebSocket;
 import io.muserver.DoneCallback;
 import io.muserver.HeaderNames;
+import io.muserver.Method;
 import io.muserver.MuRequest;
 import io.muserver.MuResponse;
 import io.muserver.MuWebSocket;
@@ -21,9 +22,11 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -114,7 +117,7 @@ class RouterSocketV3 extends BaseWebSocket {
         final Integer requestId = idMaker.incrementAndGet();
         final AsyncHandle asyncHandle = clientRequest.handleAsync();
 
-        boolean isWsUpgrade = clientRequest.headers().contains("Upgrade", "websocket", true);
+        boolean isWsUpgrade = checkIsWsUpgrade(clientRequest);
         if (isWsUpgrade && !CrankerRouterBuilder.CRANKER_PROTOCOL_3_1.equals(getProtocol())) {
             CrankerMuHandler.sendSimpleResponse(clientResponse, asyncHandle, 501, "501 Not Implemented", "Websocket not supported over " + getProtocol());
             return;
@@ -277,6 +280,58 @@ class RouterSocketV3 extends BaseWebSocket {
             }
         }
 
+    }
+
+    static boolean checkIsWsUpgrade(MuRequest req) {
+        if (req == null) return false;
+        if (!Method.GET.equals(req.method())) return false;
+
+        boolean hasHostField = Optional.ofNullable(
+                        req.headers().getAll(HeaderNames.HOST.toString())
+                )
+                .map(it -> it.stream().anyMatch(
+                        h -> h != null && !h.isEmpty()
+                ))
+                .orElse(false);
+        if (!hasHostField) return false;
+
+        boolean hasWebsocketTokenInUpgradeHeader = Optional.ofNullable(
+                        req.headers().getAll(HeaderNames.UPGRADE.toString())
+                )
+                .map(up -> up.stream().anyMatch("websocket"::equalsIgnoreCase))
+                .orElse(false);
+        if (!hasWebsocketTokenInUpgradeHeader) return false;
+
+        boolean hasUpgradeTokenInConnectionHeader = Optional.ofNullable(
+                        req.headers().getAll(HeaderNames.CONNECTION.toString())
+                )
+                .map(up -> up.stream().anyMatch("upgrade"::equalsIgnoreCase))
+                .orElse(false);
+        if (!hasUpgradeTokenInConnectionHeader) return false;
+
+        boolean isWsVer13 = Optional.ofNullable(
+                        req.headers().getAll("Sec-WebSocket-Version")
+                )
+                .map(ver -> ver.stream().anyMatch("13"::equals))
+                .orElse(false);
+        if (!isWsVer13) return false;
+
+        boolean hasBase64EncodedKey = Optional.ofNullable(
+                        req.headers().getAll("Sec-WebSocket-Key")
+                )
+                .map(key -> key.stream()
+                        .filter(k -> k != null && !k.isEmpty()
+                                && k.length() <= 24)
+                        .anyMatch(k -> {
+                            try {
+                                return 16 == Base64.getDecoder().decode(k).length;
+                            } catch (Exception e) {
+                                return false;
+                            }
+                        }))
+                .orElse(false);
+        if (!hasBase64EncodedKey) return false;
+        return true;
     }
 
     private void sendData(ByteBuffer byteBuffer, DoneCallback doneCallback) {
@@ -458,7 +513,7 @@ class RouterSocketV3 extends BaseWebSocket {
 
         context.toClientBytes.getAndAdd(content.length()); // string length should be number of bytes as this is used for headers so is ASCII
 
-        boolean isWsUpgrade = context.request.headers().contains("Upgrade", "websocket", true);
+        boolean isWsUpgrade = checkIsWsUpgrade(context.request);
         if (isWsUpgrade && protocolResponse.getStatus() == 101) {
             try {
                 WebSocketHandler handler = WebSocketHandlerBuilder.webSocketHandler()
@@ -1075,6 +1130,11 @@ class RouterSocketV3 extends BaseWebSocket {
         }
 
         @Override
+        public boolean isWebSocketRequest() {
+            return clientSession != null || checkIsWsUpgrade(request);
+        }
+
+        @Override
         public String toString() {
             return new StringJoiner(", ", RequestContext.class.getSimpleName() + "[", "]")
                 .add("wssReceivedAckBytes=" + wssReceivedAckBytes)
@@ -1091,6 +1151,7 @@ class RouterSocketV3 extends BaseWebSocket {
                 .add("durationMillis=" + durationMillis)
                 .add("error=" + error)
                 .add("state=" + state)
+                    .add("isWebSocketRequest=" + isWebSocketRequest())
                 .toString();
         }
     }

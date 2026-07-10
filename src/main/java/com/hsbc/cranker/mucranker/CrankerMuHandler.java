@@ -1,6 +1,17 @@
 package com.hsbc.cranker.mucranker;
 
-import io.muserver.*;
+import io.muserver.AsyncHandle;
+import io.muserver.ContentTypes;
+import io.muserver.DoneCallback;
+import io.muserver.ForwardedHeader;
+import io.muserver.HeaderNames;
+import io.muserver.Headers;
+import io.muserver.Method;
+import io.muserver.MuHandler;
+import io.muserver.MuRequest;
+import io.muserver.MuResponse;
+import io.muserver.Mutils;
+import io.muserver.RequestBodyListener;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -10,13 +21,16 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.Arrays.asList;
 
@@ -348,19 +362,24 @@ class CrankerMuHandler implements MuHandler {
         Headers reqHeaders = clientRequest.headers();
         List<String> customHopByHop = getCustomHopByHopHeaders(reqHeaders.get(HeaderNames.CONNECTION));
 
-        boolean isWsUpgrade = reqHeaders.contains(HeaderNames.UPGRADE, "websocket", true);
+        boolean isWsUpgrade = RouterSocketV3.checkIsWsUpgrade(clientRequest);
 
         boolean hasContentLengthOrTransferEncoding = false;
         for (Map.Entry<String, String> clientHeader : reqHeaders) {
             String key = clientHeader.getKey();
-            String lowKey = key.toLowerCase();
+            String val = clientHeader.getValue();
+            String lowKey = key.toLowerCase(Locale.US);
             if (isWsUpgrade && (lowKey.equals("upgrade") || lowKey.equals("connection"))) {
                 // allow these headers for websocket upgrade
+            } else if (isWsUpgrade && lowKey.equals("sec-websocket-key")) {
+                byte[] r16b = new byte[16];
+                ThreadLocalRandom.current().nextBytes(r16b);
+                val = Base64.getEncoder().encodeToString(r16b);
             } else if (excludedHeaders.contains(lowKey) || customHopByHop.contains(lowKey)) {
                 continue;
             }
             hasContentLengthOrTransferEncoding |= lowKey.equals("content-length") || lowKey.equals("transfer-encoding");
-            headersBuilder.appendHeader(key, clientHeader.getValue());
+            headersBuilder.appendHeader(key, val);
         }
 
         String newViaValue = getNewViaValue(clientRequest.connection().protocol() + " " + viaValue, clientRequest.headers().getAll(HeaderNames.VIA));
